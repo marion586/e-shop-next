@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${poppins.className}  text-slate-700`}>
+      <body className={`${poppins.className}text-slate-700`}>
         <div className="flex flex-col min-h-screen">
           <NavBar />
 

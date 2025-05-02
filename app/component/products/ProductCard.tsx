@@ -9,13 +9,10 @@ import React from "react";
 import { formatPrice } from "@/utils/formatPrice";
 import { Rating } from "@mui/material";
 import { useRouter } from "next/navigation";
+import { productRating } from "@/utils/productRating";
 const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
   const router = useRouter();
 
-  const productRating =
-    data.reviews.reduce((acc: number, review: any) => {
-      return acc + review.rating;
-    }, 0) / data.reviews.length;
   return (
     <div
       onClick={() => router.push(`/product/${data.id}`)}
@@ -32,7 +29,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ data }) => {
         </div>
         <div>{truncateText(data.name)}</div>
         <div>
-          <Rating value={productRating} readOnly />
+          <Rating value={productRating(data)} readOnly />
         </div>
         <div>
           {data.reviews.length > 0 ? (
