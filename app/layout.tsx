@@ -4,6 +4,7 @@ import "./globals.css";
 import NavBar from "./component/nav/NavBar";
 import Footer from "./component/footer/Footer";
 import { CartProvider } from "@/providers/CartProviders";
+import { Toaster } from "react-hot-toast";
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -22,6 +23,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${poppins.className}text-slate-700`}>
+        <Toaster
+          toastOptions={{
+            style: {
+              background: "rgb(51 65 85",
+              color: "#fff",
+            },
+          }}
+        />
         <CartProvider>
           <div className="flex flex-col min-h-screen">
             <NavBar />
