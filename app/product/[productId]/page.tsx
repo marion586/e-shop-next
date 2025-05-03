@@ -11,6 +11,10 @@ const Product = ({ params }: { params: IParams }) => {
     <div className="p-8">
       <Container>
         <ProductDetails product={product} />
+
+        <div className="flex">
+          <div> Add Rating </div>
+        </div>
       </Container>
     </div>
   );

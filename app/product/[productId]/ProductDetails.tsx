@@ -7,6 +7,7 @@ import SetQuantity from "@/app/component/products/SetQuantity";
 import { productRating } from "@/utils/productRating";
 import { Rating } from "@mui/material";
 import React, { useCallback, useState } from "react";
+import Horizontal from "@/app/component/Horizontal";
 interface ProductDetailsProps {
   product: any;
 }
@@ -26,10 +27,6 @@ export type SelectedImgType = {
   color: string;
   colorCode: string;
   image: string;
-};
-
-const Horizontal = () => {
-  return <hr className="w-[30%] my-2" />;
 };
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
@@ -117,7 +114,7 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
           handleQtyIncrease={handleQtyIncrease}
         />
         <Horizontal />
-        <Button small outline label="Add to Cart" onClick={() => {}} />
+        <Button small label="Add to Cart" onClick={() => {}} />
       </div>
     </div>
   );

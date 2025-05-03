@@ -7,6 +7,7 @@ import {
 import React from "react";
 import Image from "next/image";
 
+import { setBorderImageColor } from "@/utils/setBorderImageColor";
 interface ProductImageProps {
   cartProduct: CartProductType;
   product: any;
@@ -26,11 +27,10 @@ const ProductImage: React.FC<ProductImageProps> = ({
             <div
               key={image.color}
               onClick={() => handleColorSelect(image)}
-              className={`relative w-[80%] aspect-square rounded border-teal-300  ${
-                cartProduct.selectedImg.color == image.color
-                  ? "border-[1.5px]"
-                  : "border-none"
-              }`}
+              className={`relative w-[80%] aspect-square rounded border-teal-300  ${setBorderImageColor(
+                cartProduct,
+                image
+              )}`}
             >
               <Image
                 src={image.image}
