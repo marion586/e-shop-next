@@ -6,7 +6,7 @@ interface ListRatingProps {
 
 import Heading from "@/app/component/Heading";
 import Horizontal from "@/app/component/Horizontal";
-import { Rating } from "@mui/material";
+import { Avatar, Rating } from "@mui/material";
 import moment from "moment";
 import React from "react";
 
@@ -21,7 +21,7 @@ const ListRating: React.FC<ListRatingProps> = ({ product }) => {
             return (
               <div key={review.id} className="max-w-300px flex flex-col gap-2 ">
                 <div className="flex gap-2 items-center">
-                  <div>Avatar</div>
+                  <Avatar src={review.user.image} />
 
                   <div className="font-semibold">{review?.user.name}</div>
 
