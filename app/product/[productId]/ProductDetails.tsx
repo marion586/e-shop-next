@@ -8,6 +8,7 @@ import { productRating } from "@/utils/productRating";
 import { Rating } from "@mui/material";
 import React, { useCallback, useState } from "react";
 import Horizontal from "@/app/component/Horizontal";
+import { useCart } from "@/hooks/useCart";
 interface ProductDetailsProps {
   product: any;
 }
@@ -31,7 +32,7 @@ export type SelectedImgType = {
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   //client component is interactive and render in the server
-
+  const { handleAddProductToCart, cartProducts } = useCart();
   const [cartProduct, setCartProduct] = useState<CartProductType>({
     id: product.id,
     name: product.name,
@@ -42,6 +43,8 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
     quantity: 1,
     price: product.price,
   });
+
+  console.log(cartProducts);
 
   const handleColorSelect = useCallback(
     (value: SelectedImgType) => {
@@ -114,7 +117,11 @@ const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
           handleQtyIncrease={handleQtyIncrease}
         />
         <Horizontal />
-        <Button small label="Add to Cart" onClick={() => {}} />
+        <Button
+          small
+          label="Add to Cart"
+          onClick={() => handleAddProductToCart(cartProduct)}
+        />
       </div>
     </div>
   );
