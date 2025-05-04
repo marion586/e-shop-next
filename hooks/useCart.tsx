@@ -5,9 +5,13 @@ import toast from "react-hot-toast";
 
 type CartContextType = {
   cartTotalQty: number;
+  cartTotalAmount: number;
   cartProducts: CartProductType[] | null;
   handleAddProductToCart: (product: CartProductType) => void;
   handleRemoveProductFromCart: (product: CartProductType) => void;
+  handleCartQtyIncrease: (product: CartProductType) => void;
+  handleCartQtyDecrease: (product: CartProductType) => void;
+  handleClearCart: () => void;
 };
 
 export const CartContext = createContext<CartContextType | null>(null);
@@ -19,6 +23,7 @@ interface CartContextProviderProps {
 export const CartContextProvider = (props: CartContextProviderProps) => {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [cartTotalQty, setCartTotalQty] = useState<number>(0);
+  const [cartTotalAmount, setCartTotalAmout] = useState<number>(0);
   const [cartProducts, setCartProducts] = useState<CartProductType[] | null>(
     null
   );
@@ -29,6 +34,29 @@ export const CartContextProvider = (props: CartContextProviderProps) => {
     setCartProducts(cProducts);
   }, []);
 
+  useEffect(() => {
+    const getTotals = () => {
+      if (cartProducts) {
+        const { total, qty } = cartProducts?.reduce(
+          (acc: { total: number; qty: number }, item: CartProductType) => {
+            const itemTotal = item.price * item.quantity;
+            acc.total += itemTotal;
+            acc.qty += item.quantity;
+            return acc;
+          },
+          {
+            total: 0,
+            qty: 0,
+          }
+        );
+        setCartTotalQty(qty);
+        setCartTotalAmout(total);
+      }
+    };
+    getTotals();
+  }, [cartProducts]);
+
+  console.log("user cart qty adn subtotal", cartTotalQty, cartTotalAmount);
   const handleAddProductToCart = useCallback((product: CartProductType) => {
     setCartProducts((prev) => {
       let updatedCart;
@@ -37,7 +65,8 @@ export const CartContextProvider = (props: CartContextProviderProps) => {
       } else {
         updatedCart = [product];
       }
-      toast.success("Product added to cart");
+      toast.success("Product added to cart", { id: "add-to-cart" });
+      console.log("product added");
       localStorage.setItem("eShopCartItems", JSON.stringify(updatedCart));
       return updatedCart;
     });
@@ -57,13 +86,65 @@ export const CartContextProvider = (props: CartContextProviderProps) => {
         toast.success("Product removed from cart");
       }
     },
-    []
+    [cartProducts]
   );
+
+  const handleCartQtyIncrease = useCallback(
+    (product: CartProductType) => {
+      let updatedCart;
+      if (product.quantity === 99) {
+        return toast.error("Maximum quantity reached");
+      }
+      if (cartProducts) {
+        updatedCart = [...cartProducts];
+        const existingIndex = updatedCart.findIndex(
+          (item) => item.id === product.id
+        );
+        if (existingIndex !== -1) {
+          updatedCart[existingIndex].quantity += 1;
+          setCartProducts(updatedCart);
+          localStorage.setItem("eShopCartItems", JSON.stringify(updatedCart));
+        }
+      }
+    },
+    [cartProducts]
+  );
+
+  const handleCartQtyDecrease = useCallback(
+    (product: CartProductType) => {
+      let updatedCart;
+      if (product.quantity === 1) {
+        return toast.error("Minimum quantity reached");
+      }
+      if (cartProducts) {
+        updatedCart = [...cartProducts];
+        const existingIndex = updatedCart.findIndex(
+          (item) => item.id === product.id
+        );
+        if (existingIndex !== -1) {
+          updatedCart[existingIndex].quantity -= 1;
+          setCartProducts(updatedCart);
+          localStorage.setItem("eShopCartItems", JSON.stringify(updatedCart));
+        }
+      }
+    },
+    [cartProducts]
+  );
+
+  const handleClearCart = useCallback(() => {
+    setCartProducts(null);
+    setCartTotalQty(0);
+    localStorage.setItem("eShopCartItems", JSON.stringify(null));
+  }, [cartProducts]);
   const value = {
     cartTotalQty,
     cartProducts,
     handleAddProductToCart,
     handleRemoveProductFromCart,
+    handleCartQtyIncrease,
+    handleCartQtyDecrease,
+    handleClearCart,
+    cartTotalAmount,
   };
 
   return <CartContext.Provider value={value} {...props} />;
