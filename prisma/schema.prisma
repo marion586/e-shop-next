@@ -1,0 +1,46 @@
+datasource db {
+    provider = "mongodb"
+    url      = env("MONGO_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Account {
+    id                String  @id @default(auto()) @map("_id") @db.ObjectId
+    userid            String  @db.ObjectId
+    type              String
+    provider          String
+    providerAccountId String
+    refresh_token     String? @db.String
+    access_token      String? @db.String
+    expires_at        Int?
+    token_type        String?
+    scope             String?
+    id_token          String? @db.String
+    session_state     String?
+
+    user User @relation(fields: [userid], references: [id], onDelete: Cascade)
+
+    @@unique([provider, providerAccountId])
+}
+
+model User {
+    id             String    @id @default(auto()) @map("_id") @db.ObjectId
+    name           String?
+    email          String?   @unique
+    emailVerified  DateTime?
+    image          String?
+    hashedPassword String?
+    createdAt      DateTime  @default(now())
+    updatedAt      DateTime  @updatedAt
+    role           Role      @default(USER)
+
+    Account Account[]
+}
+
+enum Role {
+    USER
+    ADMIN
+}
