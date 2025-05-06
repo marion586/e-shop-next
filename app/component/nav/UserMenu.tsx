@@ -1,11 +1,78 @@
-import React from 'react'
-
+"use client";
+import React, { useCallback } from "react";
+import Avatar from "../Avatar";
+import { AiFillCaretDown } from "react-icons/ai";
+import Link from "next/link";
+import MenuItem from "./MenuItem";
+import { signOut } from "next-auth/react";
+import BackDrop from "./BackDrop";
 const UserMenu = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const toggleOpen = useCallback(() => {
+    setIsOpen((prev) => !prev);
+  }, []);
+  const onLogout = useCallback(() => {
+    // signOut()
+  }, []);
   return (
-    <div>
-      
-    </div>
-  )
-}
+    <>
+      <div className="relative z-30">
+        <div
+          className="p-2 border-[1px] border-slate-400 flex flex-row items-center gap-1 cursor-pointer hover:shadow-md transition text-slate-500 rounded-full"
+          onClick={toggleOpen}
+        >
+          <Avatar />
 
-export default UserMenu
+          <AiFillCaretDown />
+        </div>
+
+        {isOpen && (
+          <div className="absolute rounded-md w-[170px] bg-white overflow-hidden right-0 top-12 text-sm flex flex-col cursor-pointer">
+            <div>
+              <Link
+                href="/orders"
+                //   className="px-4 py-3 hover:bg-slate-100 transition font-semibold"
+              >
+                <MenuItem onClick={toggleOpen}>Orders</MenuItem>
+              </Link>
+              <Link
+                href="/admin"
+                //   className="px-4 py-3 hover:bg-slate-100 transition font-semibold"
+              >
+                <MenuItem onClick={toggleOpen}>Admin Dashboard</MenuItem>
+              </Link>
+              <MenuItem
+                onClick={() => {
+                  toggleOpen();
+                  signOut();
+                }}
+              >
+                Logout
+              </MenuItem>
+
+              <div>
+                <Link
+                  href="/login"
+                  //   className="px-4 py-3 hover:bg-slate-100 transition font-semibold"
+                >
+                  <MenuItem onClick={toggleOpen}>Login</MenuItem>
+                </Link>
+
+                <Link
+                  href="/register"
+                  //   className="px-4 py-3 hover:bg-slate-100 transition font-semibold"
+                >
+                  <MenuItem onClick={toggleOpen}>Register</MenuItem>
+                </Link>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+      {isOpen ? <BackDrop onClick={toggleOpen} /> : null}
+    </>
+  );
+};
+
+export default UserMenu;
