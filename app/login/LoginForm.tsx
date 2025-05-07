@@ -8,8 +8,11 @@ import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import Button from "../component/Button";
 import Link from "next/link";
 import { AiOutlineGoogle } from "react-icons/ai";
-
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 const LoginForm = () => {
+  const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(false);
   const {
     register,
@@ -25,8 +28,27 @@ const LoginForm = () => {
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
     try {
-      // Simulate a registration API call
-      console.log("User registered:", data);
+      signIn("credentials", {
+        ...data,
+        redirect: false,
+      })
+        .then((callback) => {
+          if (callback?.error) {
+            toast.error("Invalid credentials");
+          }
+          if (callback?.ok && !callback?.error) {
+            router.push("/cart");
+            router.refresh();
+            toast.success("Logged in successfully");
+          }
+        })
+        .catch((error) => {
+          console.error("Error during sign-in:", error);
+          toast.error("Sign-in error");
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
     } catch (error) {
       console.error("Registration error:", error);
     } finally {
