@@ -6,9 +6,16 @@ import Link from "next/link";
 import MenuItem from "./MenuItem";
 import { signOut } from "next-auth/react";
 import BackDrop from "./BackDrop";
-const UserMenu = () => {
+import { SafeUser } from "@/types";
+
+interface UserMenuProps {
+  currentUser?: SafeUser | null | undefined;
+}
+
+const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(false);
+  console.log("currentUser", currentUser);
   const toggleOpen = useCallback(() => {
     setIsOpen((prev) => !prev);
   }, []);
@@ -30,42 +37,47 @@ const UserMenu = () => {
         {isOpen && (
           <div className="absolute rounded-md w-[170px] bg-white overflow-hidden right-0 top-12 text-sm flex flex-col cursor-pointer">
             <div>
-              <Link
-                href="/orders"
-                //   className="px-4 py-3 hover:bg-slate-100 transition font-semibold"
-              >
-                <MenuItem onClick={toggleOpen}>Orders</MenuItem>
-              </Link>
-              <Link
-                href="/admin"
-                //   className="px-4 py-3 hover:bg-slate-100 transition font-semibold"
-              >
-                <MenuItem onClick={toggleOpen}>Admin Dashboard</MenuItem>
-              </Link>
-              <MenuItem
-                onClick={() => {
-                  toggleOpen();
-                  signOut();
-                }}
-              >
-                Logout
-              </MenuItem>
+              {currentUser ? (
+                <div>
+                  <Link
+                    href="/orders"
+                    //   className="px-4 py-3 hover:bg-slate-100 transition font-semibold"
+                  >
+                    <MenuItem onClick={toggleOpen}>Orders</MenuItem>
+                  </Link>
+                  <Link
+                    href="/admin"
+                    //   className="px-4 py-3 hover:bg-slate-100 transition font-semibold"
+                  >
+                    <MenuItem onClick={toggleOpen}>Admin Dashboard</MenuItem>
+                  </Link>
+                  <hr />
+                  <MenuItem
+                    onClick={() => {
+                      toggleOpen();
+                      signOut();
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
+                </div>
+              ) : (
+                <div>
+                  <Link
+                    href="/login"
+                    //   className="px-4 py-3 hover:bg-slate-100 transition font-semibold"
+                  >
+                    <MenuItem onClick={toggleOpen}>Login</MenuItem>
+                  </Link>
 
-              <div>
-                <Link
-                  href="/login"
-                  //   className="px-4 py-3 hover:bg-slate-100 transition font-semibold"
-                >
-                  <MenuItem onClick={toggleOpen}>Login</MenuItem>
-                </Link>
-
-                <Link
-                  href="/register"
-                  //   className="px-4 py-3 hover:bg-slate-100 transition font-semibold"
-                >
-                  <MenuItem onClick={toggleOpen}>Register</MenuItem>
-                </Link>
-              </div>
+                  <Link
+                    href="/register"
+                    //   className="px-4 py-3 hover:bg-slate-100 transition font-semibold"
+                  >
+                    <MenuItem onClick={toggleOpen}>Register</MenuItem>
+                  </Link>
+                </div>
+              )}
             </div>
           </div>
         )}

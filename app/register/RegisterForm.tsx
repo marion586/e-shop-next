@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Heading from "../component/Heading";
 import Horizontal from "../component/Horizontal";
 import Input from "../component/inputs/Input";
@@ -12,8 +12,12 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { SafeUser } from "@/types";
 
-const RegisterForm = () => {
+interface RegisterFormProps {
+  currentUser?: SafeUser | null | undefined;
+}
+const RegisterForm: React.FC<RegisterFormProps> = ({ currentUser }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(false);
   const {
@@ -25,9 +29,15 @@ const RegisterForm = () => {
       name: "",
       email: "",
       password: "",
- 
     },
   });
+
+  useEffect(() => {
+    if (currentUser) {
+      router.push("/cart");
+      router.refresh();
+    }
+  }, [currentUser, router]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
@@ -46,18 +56,18 @@ const RegisterForm = () => {
               toast.error("Invalid credentials");
             }
             if (callback?.ok && !callback?.error) {
-              router.push('/cart')
-              router.refresh()
+              router.push("/cart");
+              router.refresh();
               toast.success("Logged in successfully");
             }
-          }
-          ).catch((error) => {
+          })
+          .catch((error) => {
             console.error("Error during sign-in:", error);
             toast.error("Sign-in error");
-          }
-          ).finally(() => {
+          })
+          .finally(() => {
             setIsLoading(false);
-          } );
+          });
       });
       console.log("User registered:", data);
     } catch (error) {
@@ -66,6 +76,12 @@ const RegisterForm = () => {
       setIsLoading(false);
     }
   };
+
+  if (currentUser) {
+    return (
+      <p className="text-center text-2xl font-bold">Logged in Redirecting</p>
+    );
+  }
   return (
     <>
       <Heading title="Sign up for E~Shop" />

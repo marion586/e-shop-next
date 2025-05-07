@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Heading from "../component/Heading";
 import Horizontal from "../component/Horizontal";
 import Input from "../component/inputs/Input";
@@ -11,7 +11,12 @@ import { AiOutlineGoogle } from "react-icons/ai";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-const LoginForm = () => {
+import { SafeUser } from "@/types";
+
+interface LoginFormProps {
+  currentUser?: SafeUser | null | undefined;
+}
+const LoginForm: React.FC<LoginFormProps> = ({ currentUser }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState(false);
   const {
@@ -24,6 +29,13 @@ const LoginForm = () => {
       password: "",
     },
   });
+
+  useEffect(() => {
+    if (currentUser) {
+      router.push("/cart");
+      router.refresh();
+    }
+  }, [currentUser, router]);
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     setIsLoading(true);
@@ -55,6 +67,13 @@ const LoginForm = () => {
       setIsLoading(false);
     }
   };
+
+  if (currentUser) {
+    return (
+      <p className="text-center text-2xl font-bold">Logged in Redirecting</p>
+    );
+  }
+
   return (
     <>
       <Heading title="Sign in To E~Shop" />
