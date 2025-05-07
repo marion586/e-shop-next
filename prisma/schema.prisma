@@ -38,6 +38,7 @@ model User {
     role           Role      @default(USER)
 
     Account Account[]
+    sessions Session[]
 }
 
 model VerificationToken {
@@ -52,4 +53,12 @@ model VerificationToken {
 enum Role {
     USER
     ADMIN
+}
+
+model Session {
+    id           String   @id @default(auto()) @map("_id") @db.ObjectId
+    sessionToken String   @unique
+    userId       String   @db.ObjectId
+    expires      DateTime
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
