@@ -46,3 +46,5 @@ export default async function RootLayout({
     </html>
   );
 }
+//https://chatgpt.com/share/681cbb46-1a58-8002-9a49-0c1e9f9b1789
+//https://chatgpt.com/share/681cbb70-0d30-8001-92a8-90355079e74e

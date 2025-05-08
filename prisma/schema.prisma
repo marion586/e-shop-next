@@ -39,6 +39,25 @@ model User {
 
     Account Account[]
     sessions Session[]
+
+    Order Order[]
+}
+
+model Order {
+    id        String   @id @default(auto()) @map("_id") @db.ObjectId
+    userId    String   @db.ObjectId
+    deliveryStatus  String   @default("pending")
+    amount     Float
+    currency  String
+    status    String   @default("pending")
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    paymentIntentId String @unique
+    products CartProductType[]
+    address Address?
+    user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+
 }
 
 model VerificationToken {
@@ -49,6 +68,33 @@ model VerificationToken {
 
   @@unique([identifier, token])
 }
+
+type CartProductType {
+  id String
+  name String
+  description String
+  category String
+  brand String
+  selectedImg Image
+  quantity Int
+  price Float
+}
+
+type Image {
+    color String
+    colorCode String
+    image String
+}
+
+type Address {
+    city String
+    country String
+    line1 String
+    line2 String
+    postal_code String
+    state String
+}
+
 
 enum Role {
     USER
