@@ -35,7 +35,8 @@ export type SelectedImgType = {
 
 const ProductDetails: React.FC<ProductDetailsProps> = ({ product }) => {
   //client component is interactive and render in the server
-
+  console.log(product, "product");
+  console.log(product.images[0], "product images");
   const router = useRouter();
   const { handleAddProductToCart, cartProducts } = useCart();
   const [cartProduct, setCartProduct] = useState<CartProductType>({
