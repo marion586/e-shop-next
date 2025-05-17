@@ -35,7 +35,7 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
       return {
         id: order.id,
         customer: order.user.name,
-        ammount: formatPrice(order.amount / 100),
+        amount: formatPrice(order.amount / 100),
         paymentStatus: order.status,
         deliveryStatus: order.deliveryStatus,
         date: moment(order.createdAt).fromNow(),
@@ -56,7 +56,6 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
         );
       },
     },
-    { field: "paymentStatus", headerName: "Payment Status", width: 130 },
     {
       field: "paymentStatus",
       headerName: "Payment Status",
@@ -75,8 +74,8 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
               <Status
                 text="completed"
                 icon={MdDone}
-                bg="bg-purple-200"
-                color="text-purple-700"
+                bg="bg-green-200"
+                color="text-green-700"
               />
             ) : (
               <></>
@@ -91,7 +90,7 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
       width: 130,
       renderCell: (params) => {
         return (
-          <div className="font-bold text-slate-800">
+          <div className="font-bold text-slate-800 flex justify-center items-center">
             {params.row.deliveryStatus == "pending" ? (
               <Status
                 text="pending"
@@ -111,7 +110,7 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
                 text="delivered"
                 icon={MdDone}
                 bg="bg-green-200"
-                color="text-purple-700"
+                color="text-green-700"
               />
             ) : (
               <></>
@@ -147,7 +146,7 @@ const ManageOrdersClient: React.FC<ManageOrdersClientProps> = ({ orders }) => {
             <ActionBtn
               icon={MdRemoveRedEye}
               onClick={() => {
-                router.push(`order/${params.row.id}`);
+                router.push(`/order/${params.row.id}`);
               }}
             />
           </div>
