@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-  const { comment, rating, product, userId } = body;
+  const { comment, rating, product, userId, user } = body;
 
   const deliverdOrder = currentUser?.Order.some(
     (order) =>
@@ -30,8 +30,11 @@ export async function POST(request: Request) {
     data: {
       comment,
       rating,
-      productId: product.id,
       userId,
+      product: {
+        connect: { id: product.id },
+      },
+      user: { connect: { id: user.id } },
     },
   });
 
