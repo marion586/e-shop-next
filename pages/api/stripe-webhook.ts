@@ -123,7 +123,6 @@ export default async function handler(
 
       case "charge.succeeded":
         const charge: any = event.data.object as Stripe.Charge;
-        console.log(`Charge succeeded: ${charge.id}`);
 
         // Only try to update if payment_intent exists
         if (typeof charge.payment_intent === "string") {
