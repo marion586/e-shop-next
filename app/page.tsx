@@ -1,7 +1,6 @@
-import { products } from "@/utils/products";
+export const revalidate = 0;
 import Container from "./component/Container";
 import HomeBanner from "./component/HomeBanner";
-import { truncateText } from "@/utils/truncateText";
 import ProductCard from "./component/products/ProductCard";
 import getProducts, { IProductParams } from "@/actions/getProducts";
 import NullData from "./component/NullData";
